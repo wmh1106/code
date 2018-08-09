@@ -1,13 +1,6 @@
-// 1. 初始化数据
-let hashObj = init()
-let keys = hashObj.keys
-let hash = hashObj.hash
-// 2. 生成键盘
-// 遍历 keys，生成 kbd 标签
-// generateKeyboard(keys, hash)
-
-// 3. 监听用户动作
-// listenToUser(hash)
+const config = {
+    imgUrl : 'https://wmh1106.github.io/code/key/images/dot.png'
+}
 
 function init() {
     const keys = {
@@ -62,7 +55,9 @@ function init() {
         'p': undefined,
         'a': 'alibab.com',
         's': 'sohu.com',
-        'm': 'maidanglao'
+        'm': 'maidanglao.com',
+        'i': 'ife.baidu.com/',
+        'b': 'www.bilibili.com/'
     }
 
     let localHash = localStorage.getItem('localHash') || null;
@@ -80,45 +75,85 @@ function init() {
 
 }
 
-function tag(select) {
-    return document.createElement(select);
+function createButton(key) {
+    const button = tag('button')
+    button.innerText = '编辑'
+    button.id = key
+    button.addEventListener('click', function(event) {
+        const key = event.target.id
+        const url = prompt('请输入一个网址！')
+        hash[key] = url
+
+        const img = event.target.previousElementSibling
+
+        if (hash[key]) {
+            img.src = 'http://' + hash[key] + '/favicon.ico'
+        } else {
+            img.src = config.imgUrl
+        }
+        img.onerror = function(event) {
+            event.target.src = config.imgUrl
+        }
+    })
+
+    return button
 }
 
-for (let i = 0; i < keys.length; i++) {
-    const wrap = tag('div');
-    wrap.className = "wrap";
-    for (let j = 0; j < keys[i].length; j++) {
-        const keyboard = tag('kbd');
-        keyboard.innerText = keys[i][j];
-        wrap.appendChild(keyboard);
-
-        const img = new Image()
-        img.src = '/images/dot.png'
-        img.onerror = function(){
-          // img.src = '../images/dot.png'
-        }
-
-        const button = tag('button')
-        button.innerText = '编辑'
-        button.addEventListener('click', function(event) {
-            event.target
-            const url = prompt('请输入一个网址！')
-        })
-
-        keyboard.appendChild(img);
-        keyboard.appendChild(button);
+function createImg(domain) {
+    const img = new Image()
+    if (domain) {
+        img.src = 'http://' + domain + '/favicon.ico'
+    } else {
+        img.src = config.imgUrl
+    }
+    img.onerror = function(event) {
+        event.target.src = config.imgUrl
     }
 
-
-
-
-    $$('.content')[0].appendChild(wrap);
+    return img
 }
 
+function generateKeyboard(){
+    for (let i = 0; i < keys.length; i++) {
+        const wrap = tag('div');
+        wrap.className = "wrap";
+        for (let j = 0; j < keys[i].length; j++) {
+            const keyboard = tag('kbd');
+            keyboard.innerText = keys[i][j];
 
+            const button = createButton(keys[i][j])
+            const img = createImg(hash[keys[i][j]])
+            keyboard.appendChild(img);
+            keyboard.appendChild(button);
+    
+            wrap.appendChild(keyboard);
+        }
+        $$('.content')[0].appendChild(wrap);
+    }
+}
 
+function listenToUser(){
+    document.addEventListener('keypress', function(event) {
+        window.open('http://' + hash[event.key])
+    })
+}
 
+// 1. 初始化数据
+let hashObj = init()
+let keys = hashObj.keys
+let hash = hashObj.hash
 
+// 2 循环创建键盘
+generateKeyboard()
+
+// 3 监听用户动作
+listenToUser()
+
+// 工具函数
 function $$(select) {
     return document.querySelectorAll(select)
+}
+
+function tag(select) {
+    return document.createElement(select);
 }
