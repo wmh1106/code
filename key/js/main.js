@@ -49,7 +49,7 @@ function init() {
         'r': 'renren.com',
         't': 'taobao.com',
         'y': 'youtube.cn',
-        'u': 'uc.com',
+        'u': 'uc.cn',
         'i': 'iqiyi.com',
         'o': 'opera.com',
         'p': undefined,
@@ -67,6 +67,7 @@ function init() {
             keys: keys
         }
     } else {
+        localStorage.setItem('localHash',JSON.stringify(hash))
         return {
             hash,
             keys
@@ -83,7 +84,7 @@ function createButton(key) {
         const key = event.target.id
         const url = prompt('请输入一个网址！')
         hash[key] = url
-
+        
         const img = event.target.previousElementSibling
 
         if (hash[key]) {
@@ -94,7 +95,10 @@ function createButton(key) {
         img.onerror = function(event) {
             event.target.src = config.imgUrl
         }
+        localStorage.setItem('localHash',JSON.stringify(hash))
     })
+
+    
 
     return button
 }

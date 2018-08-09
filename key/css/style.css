@@ -7,7 +7,7 @@ html,body{
     height: 100%;
 }
 body{
-    background: url('../images/bg.jpeg') no-repeat center top;
+    background: url('../images/bg.jpg') no-repeat center top;
     background-size: auto 100%;
 }
 .content {
@@ -16,7 +16,9 @@ body{
     top:50%;
     transform: translate(-50%,-50%);
     padding: 10px 20px;
-    text-align: center
+    text-align: center;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.2);
 }
 .content .wrap{
     display: flex;
